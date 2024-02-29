@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Joe's Hot Dog</title>
+<style>
+  .menu {
+    float: left;
+    width: 45%;
+  }
+
+  .cart {
+    float: right;
+    width: 45%;
+  }
+
+  #cartArea {
+    border: 1px solid black;
+    padding: 10px;
+    margin-top: 10px;
+  }
+
+  .item {
+    margin-bottom: 5px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Menu</h1>
+
+<div class="menu">
+  <ul id="menuList"></ul>
+</div>
+
+<div class="cart">
+  <input type="text" id="itemName">
+  <button onclick="addToCart()">Add to Cart</button>
+
+  <div id="cartArea"></div>
+  
+  <button onclick="checkout()">Checkout</button>
+</div>
+
+<script>
+let menu = {
+  "hotdog": 4,
+  "fries": 3.50,
+  "soda": 1.50,
+  "sauerkraut": 1
+};
+
+let cart = {
+  "hotdog": 0,
+  "fries": 0,
+  "soda": 0,
+  "sauerkraut": 0
+};
+
+function displayMenu() {
+  let menuList = document.getElementById("menuList");
+  for (let item in menu) {
+    let menuItem = document.createElement("li");
+    menuItem.textContent = `${item} - $${menu[item].toFixed(2)}`;
+    menuList.appendChild(menuItem);
+  }
+}
+
+function addToCart() {
+  let itemName = document.getElementById("itemName").value.toLowerCase();
+  if (cart[itemName] !== undefined) {
+    cart[itemName]++;
+  }
+  displayCart();
+}
+
+function displayCart() {
+  let cartArea = document.getElementById("cartArea");
+  cartArea.innerHTML = "";
+  for (let item in cart) {
+    if (cart[item] > 0) {
+      let cartItem = document.createElement("div");
+      cartItem.textContent = `${item}: ${cart[item]}`;
+      cartItem.classList.add("item");
+      cartArea.appendChild(cartItem);
+    }
+  }
+}
+
+function checkout() {
+  let totalCost = 0;
+  let checkoutMsg = "";
+  for (let item in cart) {
+    if (cart[item] > 0) {
+      let itemCost = cart[item] * menu[item];
+      totalCost += itemCost;
+      checkoutMsg += `${item}: ${cart[item]} x $${menu[item].toFixed(2)} = $${itemCost.toFixed(2)}\n`;
+      cart[item] = 0;
+    }
+  }
+  checkoutMsg += `\nTotal Cost: $${totalCost.toFixed(2)}`;
+  alert(checkoutMsg);
+  displayCart();
+}
+
+displayMenu();
+</script>
+
+</body>
+</html>
